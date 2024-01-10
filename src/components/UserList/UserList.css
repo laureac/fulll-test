@@ -1,0 +1,15 @@
+.list-container {
+  padding: 1rem;
+  height: 50vh;
+  overflow: auto;
+  border: 0.1rem solid black;
+  margin: 0 0.5rem;
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 2rem;
+  column-gap: 5rem;
+  list-style: none;
+}

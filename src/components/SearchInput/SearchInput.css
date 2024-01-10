@@ -1,0 +1,8 @@
+.search-input {
+  margin: 1rem auto;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  background-color: lightgray;
+  border: none;
+  min-width: 15rem;
+}
