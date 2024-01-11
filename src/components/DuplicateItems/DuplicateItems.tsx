@@ -13,11 +13,10 @@ const DuplicateItems: React.FC = () => {
   const { users, setUsers, selectedCards } = context;
 
   const duplicateSelectedUsers = () => {
-    const usersToDuplicate = users.filter((user) =>
+    const usersToDuplicate: GitHubUser[] = users.filter((user) =>
       selectedCards.includes(user.id)
     );
-    const duplicateUsers: GitHubUser[] = [...usersToDuplicate];
-    setUsers([...users, ...duplicateUsers]);
+    setUsers([...users, ...usersToDuplicate]);
   };
 
   return (
