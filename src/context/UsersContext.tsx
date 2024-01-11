@@ -26,6 +26,7 @@ type UsersProviderProps = {
 };
 
 export const UsersProvider: React.FC<UsersProviderProps> = ({ children }) => {
+  // state setters and initial values
   const [selectedCards, setSelectedCards] = useState<number[]>([]);
   const [users, setUsers] = useState<GitHubUser[]>([]);
 
@@ -44,10 +45,10 @@ export const UsersProvider: React.FC<UsersProviderProps> = ({ children }) => {
     <UsersContext.Provider
       value={{
         selectedCards,
+        setSelectedCards,
         toggleCardSelection,
         users,
         setUsers,
-        setSelectedCards,
       }}
     >
       {children}

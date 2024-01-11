@@ -6,9 +6,10 @@ import { UsersContext } from "../../context/UsersContext";
 
 type UserCardProps = {
   user: GitHubUser;
+  editMode: boolean;
 };
 
-const UserCard: React.FC<UserCardProps> = ({ user }) => {
+const UserCard: React.FC<UserCardProps> = ({ user, editMode }) => {
   const context = useContext(UsersContext);
 
   if (!context) {
@@ -21,13 +22,15 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
     <div className="card">
       <div className="card__header">
         <div className="card__checkbox">
-          <input
-            type="checkbox"
-            id={`selectUser-${user.id}`}
-            name="selectUser"
-            onChange={() => toggleCardSelection(user.id)}
-            checked={selectedCards.includes(user.id)}
-          />
+          {editMode && (
+            <input
+              type="checkbox"
+              id={`selectUser-${user.id}`}
+              name="selectUser"
+              onChange={() => toggleCardSelection(user.id)}
+              checked={selectedCards.includes(user.id)}
+            />
+          )}
         </div>
         <div className="card__img-wrapper">
           <img

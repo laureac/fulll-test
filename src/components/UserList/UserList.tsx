@@ -3,7 +3,11 @@ import UserCard from "../UserCard/UserCard";
 import "./UserList.css";
 import { UsersContext } from "../../context/UsersContext";
 
-const UserList: React.FC = () => {
+type UserListProps = {
+  editMode: boolean;
+};
+
+const UserList: React.FC<UserListProps> = ({ editMode }) => {
   const context = useContext(UsersContext);
 
   if (!context) {
@@ -22,7 +26,7 @@ const UserList: React.FC = () => {
               key // ideally would use id as key, but that will create an error when we duplicate users
             ) => (
               <li key={key}>
-                <UserCard user={user} />
+                <UserCard user={user} editMode={editMode} />
               </li>
             )
           )}
