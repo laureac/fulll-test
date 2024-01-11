@@ -35,3 +35,9 @@
   gap: 1rem;
   align-items: center;
 }
+
+.actions-btn {
+  cursor: pointer;
+  background: none;
+  border: none;
+}

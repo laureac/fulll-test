@@ -16,11 +16,16 @@ const UserList: React.FC = () => {
     <div className="list-container">
       {users.length ? (
         <ul className="list-user">
-          {users.map((user) => (
-            <li key={user.id}>
-              <UserCard user={user} />
-            </li>
-          ))}
+          {users.map(
+            (
+              user,
+              key // ideally would use id as key, but that will create an error when we duplicate users
+            ) => (
+              <li key={key}>
+                <UserCard user={user} />
+              </li>
+            )
+          )}
         </ul>
       ) : (
         <div>No results</div>
