@@ -4,7 +4,9 @@ import { debounce } from "../../utils/debounce";
 import { UsersContext } from "../../context/UsersContext";
 
 const SearchInput: React.FC = () => {
-  const [input, setInput] = useState("");
+  //state setters
+  const [input, setInput] = useState<string>("");
+  const [error, setError] = useState<string | undefined>(undefined);
 
   const context = useContext(UsersContext);
 
@@ -14,6 +16,7 @@ const SearchInput: React.FC = () => {
 
   const { setUsers, selectedCards } = context;
 
+  // Fetch users from GitHub API
   const handleSearch = async (query: string) => {
     if (!query) {
       setUsers([]);
@@ -23,13 +26,27 @@ const SearchInput: React.FC = () => {
       const response = await fetch(
         `https://api.github.com/search/users?q=${query}`
       );
-      const data = await response.json();
-      setUsers(data.items || []);
-    } catch (error) {
-      console.error(error);
+      if (response.ok) {
+        const data = await response.json();
+        setUsers(data.items || []);
+        setError(undefined);
+      } else if (response.status === 403) {
+        setError(
+          "GitHub API rate limit exceeded. Please wait a while and try again."
+        );
+        setUsers([]);
+      } else {
+        setError("An error occurred while fetching data.");
+        setUsers([]);
+      }
+    } catch (error: any) {
+      console.error(error.message);
+      setError("An error occurred while fetching data.");
+      setUsers([]);
     }
   };
 
+  // Debounce the API call to avoid unnecessary requests
   useEffect(() => {
     const debouncedSearch = debounce(handleSearch, 500);
     if (input) {
@@ -41,14 +58,17 @@ const SearchInput: React.FC = () => {
   }, [input]);
 
   return (
-    <input
-      type="text"
-      placeholder="Search users"
-      value={input}
-      onChange={(e) => setInput(e.target.value)}
-      className="search-input"
-      disabled={selectedCards.length > 0}
-    />
+    <>
+      <input
+        type="text"
+        placeholder="Search users"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        className="search-input"
+        disabled={selectedCards.length > 0}
+      />
+      {error && <div className="error">{error}</div>}
+    </>
   );
 };
 

@@ -14,13 +14,17 @@ const UserList: React.FC = () => {
 
   return (
     <div className="list-container">
-      <ul className="list-user">
-        {users.map((user) => (
-          <li key={user.id}>
-            <UserCard user={user} />
-          </li>
-        ))}
-      </ul>
+      {users.length ? (
+        <ul className="list-user">
+          {users.map((user) => (
+            <li key={user.id}>
+              <UserCard user={user} />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div>No results</div>
+      )}
     </div>
   );
 };
