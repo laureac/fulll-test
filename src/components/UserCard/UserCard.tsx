@@ -1,18 +1,33 @@
-import React from "react";
+import React, { useContext } from "react";
 import { GitHubUser } from "../../types/githubProfiles";
 import "./UserCard.css";
 import { truncateString } from "../../utils/truncate";
+import { UsersContext } from "../../context/UsersContext";
 
 type UserCardProps = {
   user: GitHubUser;
 };
 
 const UserCard: React.FC<UserCardProps> = ({ user }) => {
+  const context = useContext(UsersContext);
+
+  if (!context) {
+    throw new Error("must be used within a SelectedCardsProvider");
+  }
+
+  const { toggleCardSelection, selectedCards } = context;
+
   return (
     <div className="card">
       <div className="card__header">
         <div className="card__checkbox">
-          <input type="checkbox" id="selectUser" name="selectUser" />
+          <input
+            type="checkbox"
+            id={`selectUser-${user.id}`}
+            name="selectUser"
+            onChange={() => toggleCardSelection(user.id)}
+            checked={selectedCards.includes(user.id)}
+          />
         </div>
         <div className="card__img-wrapper">
           <img
