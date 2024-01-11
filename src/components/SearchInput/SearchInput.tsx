@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import "./SearchInput.css";
 import { debounce } from "../../utils/debounce";
 import { UsersContext } from "../../context/UsersContext";
@@ -17,34 +17,37 @@ const SearchInput: React.FC = () => {
   const { setUsers, selectedCards } = context;
 
   // Fetch users from GitHub API
-  const handleSearch = async (query: string) => {
-    if (!query) {
-      setUsers([]);
-      return;
-    }
-    try {
-      const response = await fetch(
-        `https://api.github.com/search/users?q=${query}`
-      );
-      if (response.ok) {
-        const data = await response.json();
-        setUsers(data.items || []);
-        setError(undefined);
-      } else if (response.status === 403) {
-        setError(
-          "GitHub API rate limit exceeded. Please wait a while and try again."
-        );
+  const handleSearch = useCallback(
+    async (query: string) => {
+      if (!query) {
         setUsers([]);
-      } else {
+        return;
+      }
+      try {
+        const response = await fetch(
+          `https://api.github.com/search/users?q=${query}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setUsers(data.items || []);
+          setError(undefined);
+        } else if (response.status === 403) {
+          setError(
+            "GitHub API rate limit exceeded. Please wait a while and try again."
+          );
+          setUsers([]);
+        } else {
+          setError("An error occurred while fetching data.");
+          setUsers([]);
+        }
+      } catch (error: any) {
+        console.error(error.message);
         setError("An error occurred while fetching data.");
         setUsers([]);
       }
-    } catch (error: any) {
-      console.error(error.message);
-      setError("An error occurred while fetching data.");
-      setUsers([]);
-    }
-  };
+    },
+    [setUsers, setError]
+  );
 
   // Debounce the API call to avoid unnecessary requests
   useEffect(() => {
@@ -54,9 +57,7 @@ const SearchInput: React.FC = () => {
     } else {
       setUsers([]);
     }
-    // don't include debouncedSearch in the dependency array because it will cause an infinite loop
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [input]);
+  }, [input, handleSearch, setUsers]);
 
   return (
     <>
